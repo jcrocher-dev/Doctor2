@@ -5,28 +5,25 @@ import java.util.ArrayList;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-@Controller	
+@RestController
 @SpringBootApplication
 public class Doctor2Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Doctor2Application.class, args);
 		
-		
-		
-		
+			SpringApplication.run(Doctor2Application.class, args);
+				
 	}
 	
 	@RequestMapping("/doctor/{nbr}")
     @ResponseBody
-    public DoctorList dr(@PathVariable int nbr, @RequestParam(defaultValue="") String str) {
+    public DoctorList dr(@PathVariable String nbr) {
 
 		DoctorList william = new DoctorList(9, "William Hartnell");
 		DoctorList patrick = new DoctorList(10, "PAtrick Troughton");
@@ -41,12 +38,16 @@ public class Doctor2Application {
 		doctor.add(peter);
 		doctor.add(colin);
 		
-		if(nbr<9) {
+		if(Integer.parseInt(nbr) < 8 ) {
 	        throw new ResponseStatusException(HttpStatus.SEE_OTHER, "See Other");
 	    } 
+		
+		else if (Integer.parseInt(nbr) < 1 || Integer.parseInt(nbr) > 13){
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Impossible de récupérer l'incarnation "+ nbr);
+		}
 		 
 		else {
-			return doctor.get(nbr-9);
+			return doctor.get(Integer.parseInt(nbr) - 9);
 		}
 	}
 	
